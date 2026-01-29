@@ -1,42 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  Dimensions,
   TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-} from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { SwipeCard } from '../../components/SwipeCard';
-import { GlassCard } from '../../components/glass';
 import { Colors, Spacing, Typography } from '../../constants/theme';
 import { useSwipeStore } from '../../store/useSwipeStore';
 import { usePremiumStore } from '../../store/usePremiumStore';
 import { MOCK_DOG_PROFILES } from '../../utils/mockData';
 import { DogProfile } from '../../types';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
-
 export default function HomeScreen({ navigation }: any) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [profiles, setProfiles] = useState<DogProfile[]>(MOCK_DOG_PROFILES);
+  const [profiles] = useState<DogProfile[]>(MOCK_DOG_PROFILES);
 
   const { like, pass, superLike } = useSwipeStore();
   const { superLikesAvailable, useSuperLike, isPremium } = usePremiumStore();
 
   const handleSwipeLeft = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     pass(profiles[currentIndex].id);
     nextCard();
   };
 
   const handleSwipeRight = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     like(profiles[currentIndex].id);
     // Check for match (simulate)
     const isMatch = Math.random() > 0.7;
@@ -48,6 +41,7 @@ export default function HomeScreen({ navigation }: any) {
 
   const handleSwipeUp = () => {
     if (superLikesAvailable > 0 || isPremium) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
       superLike(profiles[currentIndex].id);
       useSuperLike();
       nextCard();
@@ -59,7 +53,6 @@ export default function HomeScreen({ navigation }: any) {
   };
 
   const showMatchAnimation = () => {
-    // TODO: Show match modal
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
   };
 
@@ -176,42 +169,27 @@ const ActionButton: React.FC<ActionButtonProps> = ({
   onPress,
   disabled = false,
 }) => {
-  const scale = useSharedValue(1);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-
-  const handlePress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    scale.value = withSpring(0.9, {}, () => {
-      scale.value = withSpring(1);
-    });
-    onPress();
-  };
-
   const buttonSize = size === 'large' ? 70 : 55;
 
   return (
-    <Animated.View style={[animatedStyle]}>
-      <TouchableOpacity
-        onPress={handlePress}
-        disabled={disabled}
-        style={[
-          styles.actionButton,
-          {
-            width: buttonSize,
-            height: buttonSize,
-            backgroundColor: color,
-            opacity: disabled ? 0.5 : 1,
-          },
-        ]}
-      >
-        <Text style={[styles.actionIcon, { fontSize: size === 'large' ? 32 : 24 }]}>
-          {icon}
-        </Text>
-      </TouchableOpacity>
-    </Animated.View>
+    <TouchableOpacity
+      onPress={onPress}
+      disabled={disabled}
+      activeOpacity={0.7}
+      style={[
+        styles.actionButton,
+        {
+          width: buttonSize,
+          height: buttonSize,
+          backgroundColor: color,
+          opacity: disabled ? 0.5 : 1,
+        },
+      ]}
+    >
+      <Text style={[styles.actionIcon, { fontSize: size === 'large' ? 32 : 24 }]}>
+        {icon}
+      </Text>
+    </TouchableOpacity>
   );
 };
 
