@@ -139,11 +139,11 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   details: {
-    gap: Spacing.md,
   },
   detailItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: Spacing.md,
   },
   detailLabel: {
     fontSize: Typography.sizes.base,
@@ -157,13 +157,14 @@ const styles = StyleSheet.create({
   tags: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: Spacing.sm,
   },
   tag: {
     backgroundColor: Colors.glass.accent,
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.md,
+    marginRight: Spacing.sm,
+    marginBottom: Spacing.sm,
   },
   tagText: {
     fontSize: Typography.sizes.sm,

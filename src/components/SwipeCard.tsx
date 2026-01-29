@@ -302,12 +302,13 @@ const styles = StyleSheet.create({
   tags: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: Spacing.sm,
     marginBottom: Spacing.sm,
   },
   tag: {
     borderRadius: BorderRadius.md,
     overflow: 'hidden',
+    marginRight: Spacing.sm,
+    marginBottom: Spacing.xs,
   },
   tagBlur: {
     paddingHorizontal: Spacing.md,
